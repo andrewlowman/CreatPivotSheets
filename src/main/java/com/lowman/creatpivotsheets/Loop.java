@@ -8,14 +8,6 @@ import javafx.scene.image.ImageView;
 
 public class Loop extends Task {
 
-    @FXML
-    public Button pivotButton;
-    @FXML
-    public Button exitButton;
-    @FXML
-    public TextArea textArea;
-    @FXML
-    public ImageView imageView;
     private Excel excel;
 
 
