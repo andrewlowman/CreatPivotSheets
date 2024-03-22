@@ -1,5 +1,7 @@
 package com.lowman.creatpivotsheets;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -25,6 +27,7 @@ public class MainController {
     private Excel excel;
     private File excelFile;
     private boolean ifExcelLoaded = false;
+    private Loop loop;
 
 
     @FXML
@@ -34,7 +37,7 @@ public class MainController {
 
     @FXML
     protected void onPivotButtonClick() throws IOException {
-        if(ifExcelLoaded){
+        /*if(ifExcelLoaded){
             imageView.setVisible(true);
 
             pivotButton.setDisable(true);
@@ -53,6 +56,37 @@ public class MainController {
                     textArea.appendText("Sheet number " + i + "\n" + "Over 25 lines? " + over + "\n" + "Normal sheet? " + normal + "\n");
                 }
             }
+        }else{
+            Dialog<String> dialog = new Dialog<>();
+            ButtonType buttonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            dialog.setContentText("You need to select an excel file to modify");
+            dialog.getDialogPane().getButtonTypes().add(buttonType);
+            dialog.showAndWait();
+        }*/
+
+        if(ifExcelLoaded){
+            imageView.setVisible(true);
+
+            pivotButton.setDisable(true);
+            pivotButton.setVisible(false);
+
+            int noOfSheets = excel.howManySheets();
+            textArea.appendText("Workbook has " + noOfSheets + " sheets \n");
+
+            loop = new Loop(excel);
+
+            ChangeListener<String> listener = new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                    if(t1.equals("end")){
+                        return;
+                    }
+                    textArea.appendText(t1);
+                }
+            };
+
+            loop.valueProperty().addListener(listener);
+            new Thread(loop).start();
         }else{
             Dialog<String> dialog = new Dialog<>();
             ButtonType buttonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
